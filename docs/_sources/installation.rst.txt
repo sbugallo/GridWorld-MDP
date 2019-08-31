@@ -10,7 +10,7 @@ Prerequisites:
 
 - `conda` (included in Miniconda 3 and Anaconda 3 distributions)
 
-Clone the ttt's repository
+Clone GridWorld's repository
 ============================
 
 .. code-block:: bash
@@ -76,7 +76,7 @@ Docker
 ======
 
 To facilitate the usage, a docker image is available at
-`https://hub.docker.com/r/sbugallo/ttt <https://hub.docker.com/r/sbugallo/gridworld>`_ .
+`https://hub.docker.com/r/sbugallo/gridworld <https://hub.docker.com/r/sbugallo/gridworld>`_ .
 
 Prerequisites
 -------------
