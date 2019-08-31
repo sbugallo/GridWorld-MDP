@@ -38,6 +38,11 @@ class World:
             Cell where the agent has to go.
         obstacle_positions: list
             Cells where obstacles will be placed.
+
+        Raises
+        ------
+        ValueError:
+            If any element is incompatible with the world.
         """
 
         if obstacle_positions is None:
@@ -50,9 +55,21 @@ class World:
         self.starting_position = starting_position
         self.goal_position = goal_position
 
-        self.grid = np.zeros((self.grid_height * self.grid_width))
+        self.grid = np.zeros((self.grid_height * self.grid_width), dtype=int)
+
+        if self.starting_position not in range(self.grid_width * self.grid_height):
+            raise ValueError(f"Starting cell {self.starting_position} is not valid")
+
         self.grid[self.starting_position] = 1
+
+        if self.goal_position not in range(self.grid_width * self.grid_height) or self.grid[self.goal_position] != 0:
+            raise ValueError(f"Goal cell {self.goal_position} is not valid.")
         self.grid[self.goal_position] = 2
+
+        for obstacle in self.obstacle_positions:
+            if obstacle not in range(self.grid_width * self.grid_height) or self.grid[obstacle] != 0:
+                raise ValueError(f"Obstacle cell {obstacle} is not valid.")
+
         self.grid[self.obstacle_positions] = -1
 
     def print(self, player_positions: list = None) -> list:
@@ -82,7 +99,7 @@ class World:
             row_text = "\n"
 
             for col in range(self.grid_width):
-                cell_id = row * self.grid_height + col
+                cell_id = row * self.grid_width + col
                 if cell_id in player_positions:
                     cell_color = Back.CYAN
                 else:
@@ -97,7 +114,15 @@ class World:
                     row_text += f" {cell_color}   {Back.RESET} |"
 
             if row != self.grid_height - 1:
-                row_text += "\n-----------------------"
+                divider = "\n"
+                for cell in range(self.grid_width):
+
+                    if cell != self.grid_width - 1:
+                        divider += "------"
+                    else:
+                        divider += "-----"
+
+                row_text += divider
 
             board_text += row_text
 
