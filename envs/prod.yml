@@ -1,0 +1,11 @@
+name: gridworld
+channels:
+  - anaconda
+dependencies:
+  - python=3.7
+  - numpy
+  - colorama
+  - pip
+  - pip:
+      - loguru
+      - fire

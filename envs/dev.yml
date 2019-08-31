@@ -1,0 +1,21 @@
+name: gridworld
+channels:
+  - anaconda
+dependencies:
+  - python=3.7
+  - numpy
+  - coverage
+  - colorama
+  - pytest
+  - pytest-cov
+  - pylint
+  - autopep8
+  - flake8
+  - sphinx
+  - pip
+  - pip:
+      - loguru
+      - fire
+      - sphinx_rtd_theme
+      - coveralls
+      - pytest-mock
