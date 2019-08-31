@@ -9,6 +9,14 @@ gridworld.models package
 Submodules
 ----------
 
+gridworld.models.action module
+------------------------------
+
+.. automodule:: gridworld.models.action
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 gridworld.models.world module
 -----------------------------
 
