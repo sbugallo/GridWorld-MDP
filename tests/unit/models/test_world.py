@@ -19,8 +19,8 @@ def test_world_default_initialization():
 @pytest.mark.unit
 @pytest.mark.parametrize("height, width, start, end, obstacles, player_positions, result", [
     (2, 1, 0, 1, [], None, ['\x1b[42m', '\x1b[44m']),
-    (3, 3, 0, 8, [], [], ['\x1b[42m', '\x1b[47m', '\x1b[47m', '\x1b[47m', '\x1b[47m', '\x1b[47m', '\x1b[47m', '\x1b[47m',
-                          '\x1b[44m']),
+    (3, 3, 0, 8, [], [], ['\x1b[42m', '\x1b[47m', '\x1b[47m', '\x1b[47m', '\x1b[47m', '\x1b[47m', '\x1b[47m',
+                          '\x1b[47m', '\x1b[44m']),
     (3, 3, 0, 8, [1, 2, 3, 4, 5, 6, 7], [], ['\x1b[42m', '\x1b[41m', '\x1b[41m', '\x1b[41m', '\x1b[41m', '\x1b[41m',
                                              '\x1b[41m', '\x1b[41m', '\x1b[44m']),
     (5, 3, 0, 1, [], [], ['\x1b[42m', '\x1b[44m', '\x1b[47m', '\x1b[47m', '\x1b[47m', '\x1b[47m', '\x1b[47m',
