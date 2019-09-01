@@ -6,4 +6,5 @@ Usage
 ..  toctree::
     :maxdepth: 1
 
-    examples/
+    examples/play-game
+    examples/docker

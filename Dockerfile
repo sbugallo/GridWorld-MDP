@@ -9,7 +9,7 @@ COPY ./envs/prod.yml /gridworld/envs/prod.yml
 RUN conda env create -f /gridworld/envs/prod.yml
 RUN echo '. activate gridworld' >> ~/.bashrc
 
-COPY . /ttt
+COPY . /gridworld
 RUN bash -c '/opt/conda/envs/gridworld/bin/python /gridworld/setup.py install'
 
 CMD [ "/bin/bash" ]
