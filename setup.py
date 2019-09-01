@@ -1,7 +1,7 @@
 from setuptools import setup, find_namespace_packages
 import os
 
-VERSION = '2019.08'
+VERSION = '2019.09'
 CURRENT_DIR = os.path.abspath(os.path.dirname(__file__))
 MODULE_NAME = "gridworld"
 PACKAGE_NAME = "gridowrld"

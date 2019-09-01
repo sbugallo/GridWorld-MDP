@@ -16,7 +16,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath('../'))
 
-VERSION = '2019.08'
+VERSION = '2019.09'
 
 
 # -- Project information -----------------------------------------------------
@@ -108,7 +108,7 @@ html_logo = './_static/logo-white.png'
 #
 html_favicon = './_static/favicon.ico'
 
-html_title = 'Grid Wrld'
+html_title = 'Grid World'
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
