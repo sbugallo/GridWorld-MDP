@@ -1,5 +1,7 @@
 import numpy as np
 from loguru import logger
+from mpl_toolkits.mplot3d import Axes3D  # noqa:F401
+import matplotlib.pyplot as plt
 
 from .world import World
 from .action import Action
@@ -13,19 +15,9 @@ class Agent:
         self.q_function: dict = {}
         self.environment: World = World()
 
-    def train(self, world: World, policy_search_iterations: int = 200000, value_search_iterations: int = 100000,
-              threshold: float = 1e-20, gamma: float = 0.99):
+    def run_value_iteration(self, max_iterations: int = 100000, threshold: float = 1e-20, gamma=0.99) -> None:
 
-        logger.info("Beginning agent training")
-        self.environment = world
-        self.run_value_iteration(value_search_iterations, threshold, gamma)
-        self.run_policy_iteration(policy_search_iterations, gamma)
-        self.walk()
-
-    def run_value_iteration(self, max_iterations: int = 100000, threshold: float = 1e-20,
-                            gamma=0.99) -> None:
-
-        logger.info("\tStarting value iteration")
+        logger.info("\t- Starting value iteration")
         values = np.zeros(self.environment.num_states)
         q_function = {}
 
@@ -40,13 +32,13 @@ class Agent:
 
                     reward = next_state_data["transition_probability"] * (
                                 next_state_data["reward"] + gamma * old_values[next_state_data["cell_id"]])
-                    q_values[action.name] = reward
+                    q_values[action.value] = reward
 
                 values[state.cell_id] = np.max(list(q_values.values()))
                 q_function[state.cell_id] = q_values
 
-            logger.info(f"\tValue iteration {iteration}: {np.fabs(values - old_values).sum()}")
             if np.fabs(values - old_values).sum() < threshold:
+                logger.info(f"\t\t· Done in {iteration} iterations")
                 break
 
         self.q_function = q_function
@@ -61,8 +53,9 @@ class Agent:
             old_policy = policy.copy()
             optimal_value_function = self.evaluate_policy(policy)
             policy = self.improve_policy(optimal_value_function, gamma)
-            logger.info(f"\t\t · Policy iteration {iteration}: {policy}")
+
             if np.array_equal(policy, old_policy):
+                logger.info(f"\t\t· Done in {iteration} iterations")
                 break
 
         self.policy = policy
@@ -75,7 +68,7 @@ class Agent:
             state = self.environment.get_state(state)
             action = policy[state.cell_id]
 
-            value_function[state.cell_id] = self.q_function[state.cell_id][Action(action).name]
+            value_function[state.cell_id] = self.q_function[state.cell_id][Action(action).value]
 
         return value_function
 
@@ -102,7 +95,7 @@ class Agent:
 
         return policy
 
-    def walk(self):
+    def solve(self):
 
         player_positions = [self.environment.starting_position]
         reached_goal = False
@@ -111,11 +104,38 @@ class Agent:
             current_cell_id = player_positions[-1]
             next_action = Action(self.policy[current_cell_id])
             next_cell_data = self.environment.get_state(current_cell_id).actions[next_action]
+            next_cell_state = self.environment.get_state(next_cell_data["cell_id"])
 
-            if next_cell_data["cell_id"] in player_positions:
+            if next_cell_state.cell_id in player_positions or next_cell_state.cell_type == -1:
+                player_positions.append(next_cell_data["cell_id"])
                 break
 
             player_positions.append(next_cell_data["cell_id"])
             reached_goal = next_cell_data["is_goal"]
 
-        self.environment.print(player_positions[1:-1])
+        return player_positions, reached_goal
+
+    def plot_q_function(self):
+
+        cells = np.arange(0, self.environment.num_states, 1)
+        actions = np.arange(0, len(Action), 1)
+        q_values = np.zeros((len(cells), len(actions)))
+
+        for cell in cells:
+            for action in actions:
+                q_values[cell, action] = self.q_function[cell][action]
+
+        q_values[q_values < 0] = -1 * (np.exp(q_values[q_values < 0]) - 1)
+
+        fig = plt.figure(figsize=(13, 7))
+        ax = plt.axes(projection='3d')
+        surf = ax.plot_surface(np.expand_dims(cells, -1), np.expand_dims(actions, 0), q_values, rstride=1, cstride=1, cmap='RdYlGn', edgecolor='none')
+        ax.set_xlabel('CELL ID')
+        ax.set_ylabel('ACTION')
+        ax.set_zlabel('Q FUNCTION (SMOOTHED)')
+        ax.set_title('TRAINING RESULTS')
+        fig.colorbar(surf, shrink=0.5, aspect=5)
+        ax.view_init(60, 35)
+        plt.xticks(cells)
+        plt.yticks(actions)
+        plt.show()

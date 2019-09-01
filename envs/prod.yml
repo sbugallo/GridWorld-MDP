@@ -6,6 +6,7 @@ dependencies:
   - numpy
   - colorama
   - pip
+  - matplotlib
   - pip:
       - loguru
       - fire
