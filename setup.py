@@ -14,7 +14,7 @@ setup(
     description='grid world game',
     author='Sergio Bugallo Enjamio',
     tests_require=['pytest'],
-    install_requires=["", 'loguru', 'numpy', 'fire', 'colorama'],
+    install_requires=["", 'loguru', 'numpy', 'fire', 'colorama', 'matplotlib'],
     author_email="sergiobugalloenjamio@gmail.com",
 
     license='Propietary',

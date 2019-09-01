@@ -31,7 +31,7 @@ class Agent:
                     next_state_data = state.get_action_results(action)
 
                     reward = next_state_data["transition_probability"] * (
-                                next_state_data["reward"] + gamma * old_values[next_state_data["cell_id"]])
+                            next_state_data["reward"] + gamma * old_values[next_state_data["cell_id"]])
                     q_values[action.value] = reward
 
                 values[state.cell_id] = np.max(list(q_values.values()))
@@ -85,7 +85,7 @@ class Agent:
                 next_state_data = state.get_action_results(action)
 
                 reward = next_state_data["transition_probability"] * (
-                            next_state_data["reward"] + gamma * value_function[next_state_data["cell_id"]])
+                        next_state_data["reward"] + gamma * value_function[next_state_data["cell_id"]])
 
                 if best_q_function is None or reward > best_q_function:
                     best_q_function = reward
@@ -129,7 +129,8 @@ class Agent:
 
         fig = plt.figure(figsize=(13, 7))
         ax = plt.axes(projection='3d')
-        surf = ax.plot_surface(np.expand_dims(cells, -1), np.expand_dims(actions, 0), q_values, rstride=1, cstride=1, cmap='RdYlGn', edgecolor='none')
+        surf = ax.plot_surface(np.expand_dims(cells, -1), np.expand_dims(actions, 0), q_values, rstride=1, cstride=1,
+                               cmap='RdYlGn', edgecolor='none')
         ax.set_xlabel('CELL ID')
         ax.set_ylabel('ACTION')
         ax.set_zlabel('Q FUNCTION (SMOOTHED)')
