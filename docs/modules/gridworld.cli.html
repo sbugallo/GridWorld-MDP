@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>gridworld package &mdash; Grid Wrld</title>
+  <title>gridworld.cli package &mdash; Grid Wrld</title>
   
 
   
@@ -39,8 +39,8 @@
   <link rel="stylesheet" href="../_static/styles.css" type="text/css" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="gridworld.cli package" href="gridworld.cli.html" />
-    <link rel="prev" title="API Reference" href="../reference.html" /> 
+    <link rel="next" title="gridworld.models package" href="gridworld.models.html" />
+    <link rel="prev" title="gridworld package" href="gridworld.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -96,9 +96,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">gridworld package</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="gridworld.cli.html">gridworld.cli package</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="gridworld.html">gridworld package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="gridworld.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">gridworld.cli package</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#module-gridworld.cli.play_game">gridworld.cli.play_game module</a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="gridworld.models.html">gridworld.models package</a></li>
 </ul>
 </li>
@@ -153,13 +157,15 @@
         
           <li><a href="../reference.html">API Reference</a> &raquo;</li>
         
-      <li>gridworld package</li>
+          <li><a href="gridworld.html">gridworld package</a> &raquo;</li>
+        
+      <li>gridworld.cli package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/modules/gridworld.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/modules/gridworld.cli.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -169,10 +175,10 @@
   
   <div class="rst-breadcrumbs-buttons" role="navigation" aria-label="breadcrumb navigation">
       
-        <a href="gridworld.cli.html" class="btn btn-neutral float-right" title="gridworld.cli package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="gridworld.models.html" class="btn btn-neutral float-right" title="gridworld.models package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../reference.html" class="btn btn-neutral float-left" title="API Reference" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="gridworld.html" class="btn btn-neutral float-left" title="gridworld package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
   </div>
   
@@ -181,29 +187,39 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-gridworld">
-<span id="gridworld-package"></span><h1>gridworld package<a class="headerlink" href="#module-gridworld" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="gridworld.cli.html">gridworld.cli package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="gridworld.cli.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gridworld.cli.html#module-gridworld.cli.play_game">gridworld.cli.play_game module</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="gridworld.models.html">gridworld.models package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="gridworld.models.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gridworld.models.html#module-gridworld.models.action">gridworld.models.action module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gridworld.models.html#module-gridworld.models.agent">gridworld.models.agent module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gridworld.models.html#module-gridworld.models.game">gridworld.models.game module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gridworld.models.html#module-gridworld.models.reward">gridworld.models.reward module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gridworld.models.html#module-gridworld.models.state">gridworld.models.state module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gridworld.models.html#module-gridworld.models.world">gridworld.models.world module</a></li>
-</ul>
-</li>
-</ul>
+  <div class="section" id="module-gridworld.cli">
+<span id="gridworld-cli-package"></span><h1>gridworld.cli package<a class="headerlink" href="#module-gridworld.cli" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-gridworld.cli.play_game">
+<span id="gridworld-cli-play-game-module"></span><h2>gridworld.cli.play_game module<a class="headerlink" href="#module-gridworld.cli.play_game" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="gridworld.cli.play_game.main">
+<code class="sig-prename descclassname">gridworld.cli.play_game.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gridworld/cli/play_game.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gridworld.cli.play_game.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="gridworld.cli.play_game.play_game">
+<code class="sig-prename descclassname">gridworld.cli.play_game.</code><code class="sig-name descname">play_game</code><span class="sig-paren">(</span><em class="sig-param">world_width: int = 4</em>, <em class="sig-param">world_height: int = 4</em>, <em class="sig-param">start_cell: int = 0</em>, <em class="sig-param">goal_cell: int = 15</em>, <em class="sig-param">obstacles_cells=None</em>, <em class="sig-param">policy_search_iterations: int = 200000</em>, <em class="sig-param">value_search_iterations: int = 100000</em>, <em class="sig-param">threshold: float = 1e-20</em>, <em class="sig-param">gamma: float = 0.8</em><span class="sig-paren">)</span> &#x2192; None<a class="reference internal" href="../_modules/gridworld/cli/play_game.html#play_game"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gridworld.cli.play_game.play_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes an agent solve a world with the specifications given by the user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>world_width</strong> (<em>int</em>) – World’s width in cells.</p></li>
+<li><p><strong>world_height</strong> (<em>int</em>) – World’s height in cells.</p></li>
+<li><p><strong>start_cell</strong> (<em>int</em>) – Cell where the agent will start.</p></li>
+<li><p><strong>goal_cell</strong> (<em>int</em>) – Cell where the agent has to go.</p></li>
+<li><p><strong>obstacles_cells</strong> (<em>list</em>) – Cells where obstacles will be placed.</p></li>
+<li><p><strong>policy_search_iterations</strong> (<em>int</em>) – Maximum number of iterations when looking for optimal policy.</p></li>
+<li><p><strong>value_search_iterations</strong> (<em>int</em>) – Maximum number of iterations when looking for optimal state-value function.</p></li>
+<li><p><strong>threshold</strong> (<em>float</em>) – Minimum change that should happen to continue value search iteration.</p></li>
+<li><p><strong>gamma</strong> (<em>float</em>) – Discount factor</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 </div>
 
@@ -215,10 +231,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="gridworld.cli.html" class="btn btn-neutral float-right" title="gridworld.cli package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="gridworld.models.html" class="btn btn-neutral float-right" title="gridworld.models package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../reference.html" class="btn btn-neutral float-left" title="API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="gridworld.html" class="btn btn-neutral float-left" title="gridworld package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

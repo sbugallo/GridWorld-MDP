@@ -74,6 +74,11 @@ class Game:
         logger.info("Solving game")
         player_positions, reached_goal = self.agent.solve()
 
+        custom = []
+        for step in player_positions:
+            custom.append(step)
+            self.world.print(custom[1:-1])
+
         self.world.print(player_positions[1:-1])
 
         if reached_goal:
