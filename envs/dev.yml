@@ -13,6 +13,7 @@ dependencies:
   - flake8
   - sphinx
   - pip
+  - matplotlib
   - pip:
       - loguru
       - fire
