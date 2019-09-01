@@ -57,3 +57,14 @@ def test_world_raises_value_error_if_incompatible_goal_positions(goal):
 def test_world_raises_value_error_if_incompatible_obstacles_positions(obstacles):
     with pytest.raises(ValueError, match=f"Obstacle cell {obstacles[0]} is not valid"):
         World(obstacle_positions=obstacles)
+
+
+@pytest.mark.unit
+def test_world_get_state_correctness():
+    world = World(4, 4, 0, 15, [5, 7, 11, 12])
+
+    state_1 = world.get_state(0)
+    state_2 = world.get_state(7)
+
+    assert state_1.cell_id == 0
+    assert state_2.cell_id == 7
