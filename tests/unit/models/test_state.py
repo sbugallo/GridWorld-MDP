@@ -6,19 +6,47 @@ from gridworld.models import State, Reward, Action
 @pytest.mark.unit
 @pytest.mark.parametrize("cell_id, possible_moves, cell_type, reward", [
     (0,
-     {Action.up:
-             {"cell_id": 1, "reward": Reward.road, "transition_probability": 1.0, "is_goal": False}}, 0, Reward.road),
+     {
+         Action.up: {
+             "cell_id": 1,
+             "reward": Reward.road,
+             "transition_probability": 1.0,
+             "is_goal": False
+         }
+     }, 0, Reward.road),
     (5,
-     {Action.down:
-             {"cell_id": 4, "reward": Reward.start, "transition_probability": 1.0, "is_goal": True}}, 1, Reward.start),
-    (9, {Action.left:
-             {"cell_id": 3, "reward": Reward.goal, "transition_probability": 1.0, "is_goal": False}}, 2, Reward.goal),
-    (3, {Action.right:
-             {"cell_id": 17, "reward": Reward.obstacle, "transition_probability": 1.0, "is_goal": True}}, -1,
+     {
+         Action.down:
+             {
+                 "cell_id": 4,
+                 "reward": Reward.start,
+                 "transition_probability": 1.0,
+                 "is_goal": True
+             }
+     }, 1, Reward.start),
+    (9,
+     {
+         Action.left:
+             {
+                 "cell_id": 3,
+                 "reward": Reward.goal,
+                 "transition_probability": 1.0,
+                 "is_goal": False
+             }
+     }, 2, Reward.goal),
+    (3,
+     {
+         Action.right:
+             {
+                 "cell_id": 17,
+                 "reward": Reward.obstacle,
+                 "transition_probability": 1.0,
+                 "is_goal": True
+             }
+     }, -1,
      Reward.obstacle)
 ])
 def test_state_correct_initialization(cell_id, possible_moves, cell_type, reward):
-
     state = State(cell_id, possible_moves, cell_type)
 
     assert state.cell_id == cell_id
