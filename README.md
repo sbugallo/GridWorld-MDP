@@ -8,6 +8,13 @@
 
 ## Game description
 
+<div style="display: flex;">
+    <img src="https://raw.githubusercontent.com/sbugallo/GridWorld-MDP/master/docs/_static/game.gif" width="30%"/> <img src="https://raw.githubusercontent.com/sbugallo/GridWorld-MDP/master/docs/_static/q_function.JPG" width="55%"/> 
+</div>
+
+The agent lives in a grid. Our agent must go from the starting cell (green square) to the goal cell (blue cell) but 
+there are some obstacles (red squares) blocking the agent’s path. 
+
 ## Installation usage
 
 See [documentation](https://sbugallo.github.io/GridWorld-MDP/).
@@ -17,5 +24,5 @@ A docker image is available at
 `docker run -ti sbugallo/gridworld` and then 
 
 ```bash
-gridworld-run
+gridworld-play
 ```

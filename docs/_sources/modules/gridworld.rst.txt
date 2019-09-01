@@ -11,4 +11,5 @@ Subpackages
 
 .. toctree::
 
+   gridworld.cli
    gridworld.models
