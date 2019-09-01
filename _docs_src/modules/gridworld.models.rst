@@ -25,6 +25,14 @@ gridworld.models.reward module
    :undoc-members:
    :show-inheritance:
 
+gridworld.models.state module
+-----------------------------
+
+.. automodule:: gridworld.models.state
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 gridworld.models.world module
 -----------------------------
 
