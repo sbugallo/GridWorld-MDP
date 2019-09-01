@@ -66,11 +66,11 @@ development mode:
 
     python setup.py develop
 
-This will also install some scripts that can be run directly in your terminal:
+This will also install a script that can be run directly in your terminal:
 
-- `gridworld-run`
+- `gridworld-play`
 
-To see how they work, please go to :ref:`usage` section
+To see how it works, please go to :ref:`usage` section
 
 Docker
 ======

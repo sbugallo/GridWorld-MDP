@@ -24,6 +24,7 @@ setup(
     py_modules=[],
     entry_points={
         "console_scripts":  [
+            "gridworld-play = gridworld.cli.play_game:main"
         ]
     },
     include_package_data=True,
