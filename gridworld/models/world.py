@@ -3,8 +3,8 @@ from colorama import init, Back
 from loguru import logger
 
 from .action import Action
-from .state import State
 from .reward import Reward
+from .state import State
 
 
 class World:

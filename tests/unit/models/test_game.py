@@ -1,8 +1,8 @@
-from gridworld.models import Game, World, Agent
-
+import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
-import numpy as np
+
+from gridworld.models import Game, World, Agent
 
 
 @pytest.mark.unit

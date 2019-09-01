@@ -1,10 +1,10 @@
+import matplotlib.pyplot as plt
 import numpy as np
 from loguru import logger
 from mpl_toolkits.mplot3d import Axes3D  # noqa:F401
-import matplotlib.pyplot as plt
 
-from .world import World
 from .action import Action
+from .world import World
 
 
 class Agent:
