@@ -31,3 +31,5 @@ class Game:
             logger.info(f"Agent solved the problem in {len(player_positions) - 1} moves!")
         else:
             logger.info(f"Agent could not solve the problem!")
+
+        return player_positions, reached_goal
