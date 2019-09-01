@@ -2,6 +2,8 @@ import numpy as np
 from colorama import init, Back
 from loguru import logger
 
+from .action import Action
+
 
 class World:
     """
@@ -71,6 +73,47 @@ class World:
                 raise ValueError(f"Obstacle cell {obstacle} is not valid.")
 
         self.grid[self.obstacle_positions] = -1
+
+        self._compute_world_params()
+
+    def _compute_world_params(self):
+
+        reshaped_grid = self.grid.reshape((self.grid_height, self.grid_width))
+        self.top_boundary_cells = reshaped_grid[0, :]
+        self.bottom_boundary_cells = reshaped_grid[-1, :]
+        self.left_boundary_cells = reshaped_grid[:, 0].T
+        self.right_boundary_cells = reshaped_grid[:, -1].T
+
+        self.top_left_corner_cell = self.top_boundary_cells[0]
+        self.top_right_corner_cell = self.top_boundary_cells[-1]
+        self.bottom_left_corner_cell = self.bottom_boundary_cells[0]
+        self.bottom_right_corner_cell = self.bottom_boundary_cells[-1]
+
+        self.states = []
+        for row in range(self.grid_height):
+            for col in range(self.grid_width):
+                cell = row * self.grid_width + col
+
+                possible_actions = {}
+
+                if cell not in self.top_boundary_cells:
+                    possible_actions[Action.up] = {
+                        "transition_probability": 1.0,
+                        "reward": 1,
+                        "next_state": (row - 1) * self.grid_width + col,
+                        "is_goal": cell == self.goal_position,
+                    }
+
+                if cell not in self.bottom_boundary_cells:
+                    possible_actions[Action.bottom] = (row + 1) * self.grid_width + col
+
+                if cell not in self.right_boundary_cells:
+                    possible_actions[Action.right] = row * self.grid_width + (col + 1)
+
+                if cell not in self.left_boundary_cells:
+                    possible_actions[Action.left] = row * self.grid_width + (col - 1)
+
+                self.states.append(State(cell, )
 
     def print(self, player_positions: list = None) -> list:
         """
