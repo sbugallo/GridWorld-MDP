@@ -1,4 +1,5 @@
 from .reward import Reward
+from .action import Action
 
 
 class State:
@@ -17,7 +18,7 @@ class State:
                 "cell_id": int,
                 "reward": gridworld.models.Reward,
                 "transition_probability": float,
-                "is_terminal": bool
+                "is_goal": bool
             }
         }
     """
@@ -35,7 +36,7 @@ class State:
                     "cell_id": int,
                     "reward": gridworld.models.Reward,
                     "transition_probability": float,
-                    "is_terminal": bool
+                    "is_goal": bool
                 }
             }
         cell_type: int
@@ -52,5 +53,14 @@ class State:
             self.reward = Reward.goal
         else:
             self.reward = Reward.obstacle
+
+        for move, next_state_data in possible_moves.items():
+            if not isinstance(move, Action):
+                raise ValueError("Move should be an Action instance")
+
+            assert "cell_id" in next_state_data
+            assert "reward" in next_state_data
+            assert "is_goal" in next_state_data
+            assert "transition_probability" in next_state_data
 
         self.actions = possible_moves
