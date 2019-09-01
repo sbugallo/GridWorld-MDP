@@ -3,6 +3,8 @@ from colorama import init, Back
 from loguru import logger
 
 from .action import Action
+from .state import State
+from .reward import Reward
 
 
 class World:
@@ -40,6 +42,8 @@ class World:
             Cell where the agent has to go.
         obstacle_positions: list
             Cells where obstacles will be placed.
+        num_states = int
+            Number of states in this world
 
         Raises
         ------
@@ -54,6 +58,7 @@ class World:
 
         self.grid_height = grid_height
         self.grid_width = grid_width
+        self.num_states = grid_width * grid_height
         self.starting_position = starting_position
         self.goal_position = goal_position
 
@@ -76,44 +81,41 @@ class World:
 
         self._compute_world_params()
 
-    def _compute_world_params(self):
-
-        reshaped_grid = self.grid.reshape((self.grid_height, self.grid_width))
-        self.top_boundary_cells = reshaped_grid[0, :]
-        self.bottom_boundary_cells = reshaped_grid[-1, :]
-        self.left_boundary_cells = reshaped_grid[:, 0].T
-        self.right_boundary_cells = reshaped_grid[:, -1].T
-
-        self.top_left_corner_cell = self.top_boundary_cells[0]
-        self.top_right_corner_cell = self.top_boundary_cells[-1]
-        self.bottom_left_corner_cell = self.bottom_boundary_cells[0]
-        self.bottom_right_corner_cell = self.bottom_boundary_cells[-1]
-
+    def _compute_world_params(self) -> None:
         self.states = []
         for row in range(self.grid_height):
             for col in range(self.grid_width):
                 cell = row * self.grid_width + col
+                cell_type = self.grid[cell]
 
-                possible_actions = {}
+                possible_actions = {
+                    Action.up: self._get_action(max(row - 1, 0) * self.grid_width + col),
+                    Action.down: self._get_action(min(row + 1, self.grid_height - 1) * self.grid_width + col),
+                    Action.right: self._get_action(row * self.grid_width + min(col + 1, self.grid_width - 1)),
+                    Action.left: self._get_action(row * self.grid_width + max(col - 1, 0))
+                }
 
-                if cell not in self.top_boundary_cells:
-                    possible_actions[Action.up] = {
-                        "transition_probability": 1.0,
-                        "reward": 1,
-                        "next_state": (row - 1) * self.grid_width + col,
-                        "is_goal": cell == self.goal_position,
-                    }
+                self.states.append(State(cell, possible_actions, cell_type))
 
-                if cell not in self.bottom_boundary_cells:
-                    possible_actions[Action.bottom] = (row + 1) * self.grid_width + col
+    def get_state(self, cell_id: int) -> State:
+        return self.states[cell_id]
 
-                if cell not in self.right_boundary_cells:
-                    possible_actions[Action.right] = row * self.grid_width + (col + 1)
+    def _get_action(self, next_cell: int) -> dict:
+        next_cell_type = self.grid[next_cell]
 
-                if cell not in self.left_boundary_cells:
-                    possible_actions[Action.left] = row * self.grid_width + (col - 1)
+        if next_cell_type == 0 or next_cell_type == 1:
+            reward = Reward.road.value
+        elif next_cell_type == 2:
+            reward = Reward.goal.value
+        else:
+            reward = Reward.obstacle.value * self.num_states
 
-                self.states.append(State(cell, )
+        return {
+            "transition_probability": 1.0,
+            "reward": reward,
+            "cell_id": next_cell,
+            "is_goal": next_cell == self.goal_position,
+        }
 
     def print(self, player_positions: list = None) -> list:
         """

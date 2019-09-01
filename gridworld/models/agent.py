@@ -1,97 +1,121 @@
-from pathlib import Path
-import json
-
 import numpy as np
+from loguru import logger
 
+from .world import World
 from .action import Action
 
 
 class Agent:
 
     def __init__(self):
-        self.states = None
-        self.policy = None
-        self.transition_probabilities = None
-        self.reward_probabilities = None
-        self.state_value_function = None
-        self.q_function = None
-        self.current_state = None
-        self.environment = None
+        self.policy: np.ndarray = np.array([])
+        self.state_value_function: np.ndarray = np.array([])
+        self.q_function: dict = {}
+        self.environment: World = World()
 
-    def get_next_move(self):
-        return
+    def train(self, world: World, policy_search_iterations: int = 200000, value_search_iterations: int = 100000,
+              threshold: float = 1e-20, gamma: float = 0.99):
 
-    def run_value_iteration(self, max_iterations: int = 100000, threshold: float = 1e-20, gamma=1.0):
-        num_states = len(self.environment)
-        values = np.zeros(num_states)
+        logger.info("Beginning agent training")
+        self.environment = world
+        self.run_value_iteration(value_search_iterations, threshold, gamma)
+        self.run_policy_iteration(policy_search_iterations, gamma)
+        self.walk()
+
+    def run_value_iteration(self, max_iterations: int = 100000, threshold: float = 1e-20,
+                            gamma=0.99) -> None:
+
+        logger.info("\tStarting value iteration")
+        values = np.zeros(self.environment.num_states)
+        q_function = {}
 
         for iteration in range(max_iterations):
-            new_values = values.copy()
+            old_values = values.copy()
+            for state in range(self.environment.num_states):
+                q_values = {}
+                state = self.environment.get_state(state)
 
-            for state in range(num_states):
-                q_value = []
+                for action in state.actions:
+                    next_state_data = state.get_action_results(action)
 
-                for action in Action:
-                    rewards = []
+                    reward = next_state_data["transition_probability"] * (
+                                next_state_data["reward"] + gamma * old_values[next_state_data["cell_id"]])
+                    q_values[action.name] = reward
 
-                    for next_state in
+                values[state.cell_id] = np.max(list(q_values.values()))
+                q_function[state.cell_id] = q_values
 
+            logger.info(f"\tValue iteration {iteration}: {np.fabs(values - old_values).sum()}")
+            if np.fabs(values - old_values).sum() < threshold:
+                break
 
-    def serialize(self) -> dict:
-        """
-        Serializes this Agent as a dict.
+        self.q_function = q_function
 
-        Returns
-        -------
-        serialized_agent: dict
-        """
+    def run_policy_iteration(self, max_iterations: int = 200000, gamma: float = 1.0) -> None:
+        logger.info("\t-  Starting policy iteration")
+        num_states = len(self.environment.states)
+        policy = np.zeros(num_states)
+        optimal_value_function = np.zeros(num_states)
 
-        return {
-            "states": self.states,
-            "policy": self.policy,
-            "transition_probabilities": self.transition_probabilities,
-            "reward_probabilities": self.reward_probabilities,
-            "state_value_function": self.state_value_function,
-            "q_function": self.q_function,
-        }
+        for iteration in range(max_iterations):
+            old_policy = policy.copy()
+            optimal_value_function = self.evaluate_policy(policy)
+            policy = self.improve_policy(optimal_value_function, gamma)
+            logger.info(f"\t\t · Policy iteration {iteration}: {policy}")
+            if np.array_equal(policy, old_policy):
+                break
 
-    def deserialize(self, json_data):
-        """
-        Dumps specified `json_data` to the agent.
+        self.policy = policy
+        self.state_value_function = optimal_value_function
 
-        Parameters
-        ----------
-        json_data: dict
-            Dictionary with the following format: {mdp: dict}
-        """
+    def evaluate_policy(self, policy):
 
-        self.states = json_data["states"]
-        self.policy = json_data["policy"]
-        self.transition_probabilities = json_data["transition_probabilities"]
-        self.reward_probabilities = json_data["reward_probabilities"]
-        self.state_value_function = json_data["state_value_function"]
-        self.q_function = json_data["q_function"]
+        value_function = np.zeros(self.environment.num_states)
+        for state in range(self.environment.num_states):
+            state = self.environment.get_state(state)
+            action = policy[state.cell_id]
 
-    def load(self, path: str) -> None:
-        """
-        Loads a JSON file containing agent's params.
+            value_function[state.cell_id] = self.q_function[state.cell_id][Action(action).name]
 
-        Parameters
-        ----------
-        path: str
-            Path of the JSON file.
-        """
-        json_data = json.loads(Path(path).read_text())
-        self.deserialize(json_data)
+        return value_function
 
-    def save(self, path: str) -> None:
-        """
-        Saves model's params as a JSON file.
+    def improve_policy(self, value_function, gamma) -> np.ndarray:
+        num_states = len(self.environment.states)
+        policy = np.zeros(num_states)
 
-        Parameters
-        ----------
-        path: str
-            Where to save agent params.
-        """
-        with open(path, 'w') as fp:
-            json.dump(self.serialize(), fp)
+        for state in range(num_states):
+            best_q_function = None
+            best_action = None
+            state = self.environment.get_state(state)
+
+            for action in state.actions:
+                next_state_data = state.get_action_results(action)
+
+                reward = next_state_data["transition_probability"] * (
+                            next_state_data["reward"] + gamma * value_function[next_state_data["cell_id"]])
+
+                if best_q_function is None or reward > best_q_function:
+                    best_q_function = reward
+                    best_action = action
+
+            policy[state.cell_id] = best_action.value
+
+        return policy
+
+    def walk(self):
+
+        player_positions = [self.environment.starting_position]
+        reached_goal = False
+
+        while not reached_goal:
+            current_cell_id = player_positions[-1]
+            next_action = Action(self.policy[current_cell_id])
+            next_cell_data = self.environment.get_state(current_cell_id).actions[next_action]
+
+            if next_cell_data["cell_id"] in player_positions:
+                break
+
+            player_positions.append(next_cell_data["cell_id"])
+            reached_goal = next_cell_data["is_goal"]
+
+        self.environment.print(player_positions[1:-1])

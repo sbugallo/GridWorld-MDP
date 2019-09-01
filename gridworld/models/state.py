@@ -1,4 +1,3 @@
-from .reward import Reward
 from .action import Action
 
 
@@ -8,10 +7,8 @@ class State:
 
     Attributes
     ----------
-
     cell_id: int
     cell_type: int
-    reward: gridworld.models.Reward
     actions: dict
         Format: {
             gridworld.models.Action: {
@@ -25,7 +22,6 @@ class State:
 
     def __init__(self, cell_id: int, possible_moves: dict, cell_type: int) -> None:
         """
-
         Parameters
         ----------
         cell_id: int
@@ -45,15 +41,6 @@ class State:
         self.cell_id = cell_id
         self.cell_type = cell_type
 
-        if cell_type == 0:
-            self.reward = Reward.road
-        elif cell_type == 1:
-            self.reward = Reward.start
-        elif cell_type == 2:
-            self.reward = Reward.goal
-        else:
-            self.reward = Reward.obstacle
-
         for move, next_state_data in possible_moves.items():
             if not isinstance(move, Action):
                 raise ValueError("Move should be an Action instance")
@@ -64,3 +51,24 @@ class State:
             assert "transition_probability" in next_state_data
 
         self.actions = possible_moves
+
+    def get_action_results(self, action: Action) -> dict:
+        """
+        Retrieves the results of performing specified `action` in current state.
+
+        Parameters
+        ----------
+        action: gridworld.models.Action
+            Action to be performed.
+
+        Returns
+        -------
+        results: dict
+            Format: {
+                "cell_id": int,
+                "reward": gridworld.models.Reward,
+                "transition_probability": float,
+                "is_goal": bool
+            }
+        """
+        return self.actions[action]
