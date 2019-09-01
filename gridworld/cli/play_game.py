@@ -1,5 +1,3 @@
-from typing import List
-
 import fire
 from loguru import logger
 
