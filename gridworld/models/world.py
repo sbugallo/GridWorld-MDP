@@ -82,6 +82,8 @@ class World:
         self._compute_world_params()
 
     def _compute_world_params(self) -> None:
+        """Computes results of applying every action to each cell."""
+
         self.states = []
         for row in range(self.grid_height):
             for col in range(self.grid_width):
@@ -98,9 +100,35 @@ class World:
                 self.states.append(State(cell, possible_actions, cell_type))
 
     def get_state(self, cell_id: int) -> State:
+        """
+        Retrieves the state of the given `cell_id`.
+
+        Parameters
+        ----------
+        cell_id: int
+            ID of the cell.
+
+        Returns
+        -------
+        cells_state: gridworld.models.State
+        """
         return self.states[cell_id]
 
     def _get_action(self, next_cell: int) -> dict:
+        """
+        Generates action results.
+
+        Parameters
+        ----------
+        next_cell: int
+            Cell ID where agent will be placed after performing the action
+
+        Returns
+        -------
+        action_results: dict
+            Format: {"transition_probability": int, "reward": float, "cell_id": int, "is_goal": bool}
+
+        """
         next_cell_type = self.grid[next_cell]
 
         if next_cell_type == 0 or next_cell_type == 1:

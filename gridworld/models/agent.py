@@ -8,7 +8,16 @@ from .world import World
 
 
 class Agent:
+    """
+    Models a Markov Decision Process-based agent.
 
+    Parameters
+    ----------
+    policy: numpy.ndarray
+    state_value_function: numpy.ndarray
+    q_function: dict
+    environment: gridworld.models.World
+    """
     def __init__(self):
         self.policy: np.ndarray = np.array([])
         self.state_value_function: np.ndarray = np.array([])
@@ -16,6 +25,18 @@ class Agent:
         self.environment: World = World()
 
     def run_value_iteration(self, max_iterations: int = 100000, threshold: float = 1e-20, gamma=0.99) -> None:
+        """
+        Estimates optimal state-value function.
+
+        Parameters
+        ----------
+        max_iterations: float
+            Maximum number of iterations when looking for state-value function.
+        threshold: float
+            Minimum change that should happen to continue value search iteration.
+        gamma: float
+            Discount factor
+        """
 
         logger.info("\t- Starting value iteration")
         values = np.zeros(self.environment.num_states)
@@ -44,6 +65,16 @@ class Agent:
         self.q_function = q_function
 
     def run_policy_iteration(self, max_iterations: int = 200000, gamma: float = 1.0) -> None:
+        """
+        Estimates optimal policy function.
+
+        Parameters
+        ----------
+        max_iterations: float
+            Maximum number of iterations when looking for policy function.
+        gamma: float
+            Discount factor
+        """
         logger.info("\t-  Starting policy iteration")
         num_states = len(self.environment.states)
         policy = np.zeros(num_states)
@@ -61,7 +92,19 @@ class Agent:
         self.policy = policy
         self.state_value_function = optimal_value_function
 
-    def evaluate_policy(self, policy):
+    def evaluate_policy(self, policy: np.ndarray) -> np.ndarray:
+        """
+        Evaluates a policy (Q value for each cell).
+
+        Parameters
+        ----------
+        policy: numpy.ndarray
+            Policy to be evaluated using agents estimated Q function.
+
+        Returns
+        -------
+        state_value_function: numpy.ndarray
+        """
 
         value_function = np.zeros(self.environment.num_states)
         for state in range(self.environment.num_states):
@@ -73,6 +116,20 @@ class Agent:
         return value_function
 
     def improve_policy(self, value_function, gamma) -> np.ndarray:
+        """
+        Computes a new policy for the given values.
+
+        Parameters
+        ----------
+        value_function: numpy.ndarray
+            Maximum Q values obtained with the curren policy
+        gamma: float
+            Discount factor
+
+        Returns
+        -------
+        new_policy: numpy.ndarray
+        """
         num_states = len(self.environment.states)
         policy = np.zeros(num_states)
 
@@ -96,6 +153,7 @@ class Agent:
         return policy
 
     def solve(self):
+        """Solves the board using all estimated parameters."""
 
         player_positions = [self.environment.starting_position]
         reached_goal = False
@@ -116,6 +174,7 @@ class Agent:
         return player_positions, reached_goal
 
     def plot_q_function(self):
+        """Polts a 3D density plot representing agent's Q function values distribution."""
 
         cells = np.arange(0, self.environment.num_states, 1)
         actions = np.arange(0, len(Action), 1)
