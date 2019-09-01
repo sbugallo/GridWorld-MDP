@@ -51,7 +51,6 @@ def test_state_correct_initialization(cell_id, possible_moves, cell_type, reward
 
     assert state.cell_id == cell_id
     assert state.cell_type == cell_type
-    assert state.reward == reward
 
     for move, next_state_data in state.actions.items():
         assert isinstance(move, Action)
@@ -77,3 +76,38 @@ def test_state_raises_error_if_possible_moves_keys_are_not_actions():
 def test_state_raises_assertion_error_if_possible_moves_malformed(possible_moves):
     with pytest.raises(AssertionError):
         State(2, possible_moves, 0)
+
+
+@pytest.mark.unit
+def test_state_get_action_results_correctness():
+    moves = {
+        Action.up: {
+            "cell_id": 0,
+            "reward": 0,
+            "transition_probability": 1.0,
+            "is_goal": False
+        },
+        Action.down: {
+            "cell_id": 4,
+            "reward": 1,
+            "transition_probability": 1.0,
+            "is_goal": True
+        },
+        Action.left: {
+            "cell_id": 0,
+            "reward": 0,
+            "transition_probability": 1.0,
+            "is_goal": False
+        },
+        Action.right: {
+            "cell_id": 1,
+            "reward": 0,
+            "transition_probability": 1.0,
+            "is_goal": False
+        },
+    }
+
+    state = State(0, moves, 0)
+
+    for action in Action:
+        assert state.get_action_results(action) == moves[action]

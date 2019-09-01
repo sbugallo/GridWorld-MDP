@@ -157,8 +157,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for gridworld.models.state</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">.reward</span> <span class="k">import</span> <span class="n">Reward</span>
-<span class="kn">from</span> <span class="nn">.action</span> <span class="k">import</span> <span class="n">Action</span>
+<span></span><span class="kn">from</span> <span class="nn">.action</span> <span class="k">import</span> <span class="n">Action</span>
 
 
 <div class="viewcode-block" id="State"><a class="viewcode-back" href="../../../modules/gridworld.models.html#gridworld.models.state.State">[docs]</a><span class="k">class</span> <span class="nc">State</span><span class="p">:</span>
@@ -167,19 +166,9 @@
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-
 <span class="sd">    cell_id: int</span>
 <span class="sd">    cell_type: int</span>
-<span class="sd">    reward: gridworld.models.Reward</span>
 <span class="sd">    actions: dict</span>
-<span class="sd">        Format: {</span>
-<span class="sd">            gridworld.models.Action: {</span>
-<span class="sd">                &quot;cell_id&quot;: int,</span>
-<span class="sd">                &quot;reward&quot;: gridworld.models.Reward,</span>
-<span class="sd">                &quot;transition_probability&quot;: float,</span>
-<span class="sd">                &quot;is_goal&quot;: bool</span>
-<span class="sd">            }</span>
-<span class="sd">        }</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">possible_moves</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">cell_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -190,28 +179,12 @@
 <span class="sd">        cell_id: int</span>
 <span class="sd">            Cell index in world&#39;s grid.</span>
 <span class="sd">        possible_moves: dict</span>
-<span class="sd">            Format: {</span>
-<span class="sd">                gridworld.models.Action: {</span>
-<span class="sd">                    &quot;cell_id&quot;: int,</span>
-<span class="sd">                    &quot;reward&quot;: gridworld.models.Reward,</span>
-<span class="sd">                    &quot;transition_probability&quot;: float,</span>
-<span class="sd">                    &quot;is_goal&quot;: bool</span>
-<span class="sd">                }</span>
-<span class="sd">            }</span>
 <span class="sd">        cell_type: int</span>
 <span class="sd">            0 -&gt; road, 1 -&gt; start, 2 -&gt; goal, -1 -&gt; obstacle</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cell_id</span> <span class="o">=</span> <span class="n">cell_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cell_type</span> <span class="o">=</span> <span class="n">cell_type</span>
-
-        <span class="k">if</span> <span class="n">cell_type</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">reward</span> <span class="o">=</span> <span class="n">Reward</span><span class="o">.</span><span class="n">road</span>
-        <span class="k">elif</span> <span class="n">cell_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">reward</span> <span class="o">=</span> <span class="n">Reward</span><span class="o">.</span><span class="n">start</span>
-        <span class="k">elif</span> <span class="n">cell_type</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">reward</span> <span class="o">=</span> <span class="n">Reward</span><span class="o">.</span><span class="n">goal</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">reward</span> <span class="o">=</span> <span class="n">Reward</span><span class="o">.</span><span class="n">obstacle</span>
 
         <span class="k">for</span> <span class="n">move</span><span class="p">,</span> <span class="n">next_state_data</span> <span class="ow">in</span> <span class="n">possible_moves</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">move</span><span class="p">,</span> <span class="n">Action</span><span class="p">):</span>
@@ -222,7 +195,24 @@
             <span class="k">assert</span> <span class="s2">&quot;is_goal&quot;</span> <span class="ow">in</span> <span class="n">next_state_data</span>
             <span class="k">assert</span> <span class="s2">&quot;transition_probability&quot;</span> <span class="ow">in</span> <span class="n">next_state_data</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> <span class="n">possible_moves</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> <span class="n">possible_moves</span>
+
+<div class="viewcode-block" id="State.get_action_results"><a class="viewcode-back" href="../../../modules/gridworld.models.html#gridworld.models.state.State.get_action_results">[docs]</a>    <span class="k">def</span> <span class="nf">get_action_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves the results of performing specified `action` in current state.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        action: gridworld.models.Action</span>
+<span class="sd">            Action to be performed.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        results: dict</span>
+<span class="sd">            Format: {cell_id: int, reward: gridworld.models.Reward, transition_probability: float, is_goal: bool}</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">action</span><span class="p">]</span></div></div>
 </pre></div>
 
            </div>

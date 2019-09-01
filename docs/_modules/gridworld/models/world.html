@@ -161,6 +161,10 @@
 <span class="kn">from</span> <span class="nn">colorama</span> <span class="k">import</span> <span class="n">init</span><span class="p">,</span> <span class="n">Back</span>
 <span class="kn">from</span> <span class="nn">loguru</span> <span class="k">import</span> <span class="n">logger</span>
 
+<span class="kn">from</span> <span class="nn">.action</span> <span class="k">import</span> <span class="n">Action</span>
+<span class="kn">from</span> <span class="nn">.reward</span> <span class="k">import</span> <span class="n">Reward</span>
+<span class="kn">from</span> <span class="nn">.state</span> <span class="k">import</span> <span class="n">State</span>
+
 
 <div class="viewcode-block" id="World"><a class="viewcode-back" href="../../../modules/gridworld.models.html#gridworld.models.world.World">[docs]</a><span class="k">class</span> <span class="nc">World</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -197,6 +201,8 @@
 <span class="sd">            Cell where the agent has to go.</span>
 <span class="sd">        obstacle_positions: list</span>
 <span class="sd">            Cells where obstacles will be placed.</span>
+<span class="sd">        num_states = int</span>
+<span class="sd">            Number of states in this world</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -211,6 +217,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">grid_height</span> <span class="o">=</span> <span class="n">grid_height</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grid_width</span> <span class="o">=</span> <span class="n">grid_width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_states</span> <span class="o">=</span> <span class="n">grid_width</span> <span class="o">*</span> <span class="n">grid_height</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">starting_position</span> <span class="o">=</span> <span class="n">starting_position</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">goal_position</span> <span class="o">=</span> <span class="n">goal_position</span>
 
@@ -230,6 +237,72 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Obstacle cell </span><span class="si">{obstacle}</span><span class="s2"> is not valid.&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">obstacle_positions</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compute_world_params</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_compute_world_params</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Computes results of applying every action to each cell.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">states</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_height</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_width</span><span class="p">):</span>
+                <span class="n">cell</span> <span class="o">=</span> <span class="n">row</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_width</span> <span class="o">+</span> <span class="n">col</span>
+                <span class="n">cell_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span>
+
+                <span class="n">possible_actions</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">Action</span><span class="o">.</span><span class="n">up</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_action</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">row</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_width</span> <span class="o">+</span> <span class="n">col</span><span class="p">),</span>
+                    <span class="n">Action</span><span class="o">.</span><span class="n">down</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_action</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">row</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_height</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_width</span> <span class="o">+</span> <span class="n">col</span><span class="p">),</span>
+                    <span class="n">Action</span><span class="o">.</span><span class="n">right</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_action</span><span class="p">(</span><span class="n">row</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_width</span> <span class="o">+</span> <span class="nb">min</span><span class="p">(</span><span class="n">col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_width</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)),</span>
+                    <span class="n">Action</span><span class="o">.</span><span class="n">left</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_action</span><span class="p">(</span><span class="n">row</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_width</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="n">col</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+                <span class="p">}</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">State</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">possible_actions</span><span class="p">,</span> <span class="n">cell_type</span><span class="p">))</span>
+
+<div class="viewcode-block" id="World.get_state"><a class="viewcode-back" href="../../../modules/gridworld.models.html#gridworld.models.world.World.get_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cell_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">State</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves the state of the given `cell_id`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cell_id: int</span>
+<span class="sd">            ID of the cell.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        cells_state: gridworld.models.State</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">states</span><span class="p">[</span><span class="n">cell_id</span><span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">next_cell</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates action results.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        next_cell: int</span>
+<span class="sd">            Cell ID where agent will be placed after performing the action</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        action_results: dict</span>
+<span class="sd">            Format: {&quot;transition_probability&quot;: int, &quot;reward&quot;: float, &quot;cell_id&quot;: int, &quot;is_goal&quot;: bool}</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">next_cell_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">[</span><span class="n">next_cell</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">next_cell_type</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">next_cell_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="n">Reward</span><span class="o">.</span><span class="n">road</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">elif</span> <span class="n">next_cell_type</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="n">Reward</span><span class="o">.</span><span class="n">goal</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="n">Reward</span><span class="o">.</span><span class="n">obstacle</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_states</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;transition_probability&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="s2">&quot;reward&quot;</span><span class="p">:</span> <span class="n">reward</span><span class="p">,</span>
+            <span class="s2">&quot;cell_id&quot;</span><span class="p">:</span> <span class="n">next_cell</span><span class="p">,</span>
+            <span class="s2">&quot;is_goal&quot;</span><span class="p">:</span> <span class="n">next_cell</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">goal_position</span><span class="p">,</span>
+        <span class="p">}</span>
 
 <div class="viewcode-block" id="World.print"><a class="viewcode-back" href="../../../modules/gridworld.models.html#gridworld.models.world.World.print">[docs]</a>    <span class="k">def</span> <span class="nf">print</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">player_positions</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>

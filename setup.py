@@ -14,7 +14,7 @@ setup(
     description='grid world game',
     author='Sergio Bugallo Enjamio',
     tests_require=['pytest'],
-    install_requires=["", 'loguru', 'numpy', 'fire', 'colorama'],
+    install_requires=["", 'loguru', 'numpy', 'fire', 'colorama', 'matplotlib'],
     author_email="sergiobugalloenjamio@gmail.com",
 
     license='Propietary',
@@ -24,6 +24,7 @@ setup(
     py_modules=[],
     entry_points={
         "console_scripts":  [
+            "gridworld-play = gridworld.cli.play_game:main"
         ]
     },
     include_package_data=True,

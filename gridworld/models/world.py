@@ -2,6 +2,10 @@ import numpy as np
 from colorama import init, Back
 from loguru import logger
 
+from .action import Action
+from .reward import Reward
+from .state import State
+
 
 class World:
     """
@@ -38,6 +42,8 @@ class World:
             Cell where the agent has to go.
         obstacle_positions: list
             Cells where obstacles will be placed.
+        num_states = int
+            Number of states in this world
 
         Raises
         ------
@@ -52,6 +58,7 @@ class World:
 
         self.grid_height = grid_height
         self.grid_width = grid_width
+        self.num_states = grid_width * grid_height
         self.starting_position = starting_position
         self.goal_position = goal_position
 
@@ -71,6 +78,72 @@ class World:
                 raise ValueError(f"Obstacle cell {obstacle} is not valid.")
 
         self.grid[self.obstacle_positions] = -1
+
+        self._compute_world_params()
+
+    def _compute_world_params(self) -> None:
+        """Computes results of applying every action to each cell."""
+
+        self.states = []
+        for row in range(self.grid_height):
+            for col in range(self.grid_width):
+                cell = row * self.grid_width + col
+                cell_type = self.grid[cell]
+
+                possible_actions = {
+                    Action.up: self._get_action(max(row - 1, 0) * self.grid_width + col),
+                    Action.down: self._get_action(min(row + 1, self.grid_height - 1) * self.grid_width + col),
+                    Action.right: self._get_action(row * self.grid_width + min(col + 1, self.grid_width - 1)),
+                    Action.left: self._get_action(row * self.grid_width + max(col - 1, 0))
+                }
+
+                self.states.append(State(cell, possible_actions, cell_type))
+
+    def get_state(self, cell_id: int) -> State:
+        """
+        Retrieves the state of the given `cell_id`.
+
+        Parameters
+        ----------
+        cell_id: int
+            ID of the cell.
+
+        Returns
+        -------
+        cells_state: gridworld.models.State
+        """
+        return self.states[cell_id]
+
+    def _get_action(self, next_cell: int) -> dict:
+        """
+        Generates action results.
+
+        Parameters
+        ----------
+        next_cell: int
+            Cell ID where agent will be placed after performing the action
+
+        Returns
+        -------
+        action_results: dict
+            Format: {"transition_probability": int, "reward": float, "cell_id": int, "is_goal": bool}
+
+        """
+        next_cell_type = self.grid[next_cell]
+
+        if next_cell_type == 0 or next_cell_type == 1:
+            reward = Reward.road.value
+        elif next_cell_type == 2:
+            reward = Reward.goal.value
+        else:
+            reward = Reward.obstacle.value * self.num_states
+
+        return {
+            "transition_probability": 1.0,
+            "reward": reward,
+            "cell_id": next_cell,
+            "is_goal": next_cell == self.goal_position,
+        }
 
     def print(self, player_positions: list = None) -> list:
         """
