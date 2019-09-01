@@ -25,7 +25,7 @@ if errorlevel 9009 (
 	exit /b 1
 )
 
-sphinx-apidoc.exe -M -f -o modules ../ttt
+sphinx-apidoc.exe -M -f -o modules ../gridworld
 %SPHINXBUILD% -M %1 %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
 rmdir ..\docs /s /q
 mkdir ..\docs

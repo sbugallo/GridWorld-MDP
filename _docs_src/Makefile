@@ -19,7 +19,7 @@ help:
 %: Makefile
 	sphinx-apidoc -M -f -o modules ../ttt
 	rm modules/modules.rst
-	for f in modules/ttt.*.rst ; do \
+	for f in modules/gridworld.*.rst ; do \
 	    sed -i "1,10d" $$f ; \
 	done
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
