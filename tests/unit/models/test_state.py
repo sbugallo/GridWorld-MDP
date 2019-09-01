@@ -51,7 +51,6 @@ def test_state_correct_initialization(cell_id, possible_moves, cell_type, reward
 
     assert state.cell_id == cell_id
     assert state.cell_type == cell_type
-    assert state.reward == reward
 
     for move, next_state_data in state.actions.items():
         assert isinstance(move, Action)
