@@ -100,6 +100,8 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">gridworld.models package</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l5"><a class="reference internal" href="#module-gridworld.models.action">gridworld.models.action module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#module-gridworld.models.reward">gridworld.models.reward module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#module-gridworld.models.state">gridworld.models.state module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="#module-gridworld.models.world">gridworld.models.world module</a></li>
 </ul>
 </li>
@@ -215,6 +217,98 @@
 <dt id="gridworld.models.action.Action.up">
 <code class="sig-name descname">up</code><em class="property"> = 0</em><a class="headerlink" href="#gridworld.models.action.Action.up" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-gridworld.models.reward">
+<span id="gridworld-models-reward-module"></span><h2>gridworld.models.reward module<a class="headerlink" href="#module-gridworld.models.reward" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gridworld.models.reward.Reward">
+<em class="property">class </em><code class="sig-prename descclassname">gridworld.models.reward.</code><code class="sig-name descname">Reward</code><a class="reference internal" href="../_modules/gridworld/models/reward.html#Reward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gridworld.models.reward.Reward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>Models all possible rewards.</p>
+<dl class="attribute">
+<dt id="gridworld.models.reward.Reward.goal">
+<code class="sig-name descname">goal</code><em class="property"> = 1</em><a class="headerlink" href="#gridworld.models.reward.Reward.goal" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="gridworld.models.reward.Reward.obstacle">
+<code class="sig-name descname">obstacle</code><em class="property"> = -1</em><a class="headerlink" href="#gridworld.models.reward.Reward.obstacle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="gridworld.models.reward.Reward.road">
+<code class="sig-name descname">road</code><em class="property"> = 0</em><a class="headerlink" href="#gridworld.models.reward.Reward.road" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="gridworld.models.reward.Reward.start">
+<code class="sig-name descname">start</code><em class="property"> = 0</em><a class="headerlink" href="#gridworld.models.reward.Reward.start" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-gridworld.models.state">
+<span id="gridworld-models-state-module"></span><h2>gridworld.models.state module<a class="headerlink" href="#module-gridworld.models.state" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gridworld.models.state.State">
+<em class="property">class </em><code class="sig-prename descclassname">gridworld.models.state.</code><code class="sig-name descname">State</code><span class="sig-paren">(</span><em class="sig-param">cell_id: int</em>, <em class="sig-param">possible_moves: dict</em>, <em class="sig-param">cell_type: int</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gridworld/models/state.html#State"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gridworld.models.state.State" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Models states in a MDP.</p>
+<dl class="attribute">
+<dt id="gridworld.models.state.State.cell_id">
+<code class="sig-name descname">cell_id</code><a class="headerlink" href="#gridworld.models.state.State.cell_id" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gridworld.models.state.State.cell_type">
+<code class="sig-name descname">cell_type</code><a class="headerlink" href="#gridworld.models.state.State.cell_type" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gridworld.models.state.State.reward">
+<code class="sig-name descname">reward</code><a class="headerlink" href="#gridworld.models.state.State.reward" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>gridworld.models.Reward</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gridworld.models.state.State.actions">
+<code class="sig-name descname">actions</code><a class="headerlink" href="#gridworld.models.state.State.actions" title="Permalink to this definition">¶</a></dt>
+<dd><dl>
+<dt>Format: {</dt><dd><dl class="simple">
+<dt>gridworld.models.Action: {</dt><dd><p>“cell_id”: int,
+“reward”: gridworld.models.Reward,
+“transition_probability”: float,
+“is_goal”: bool</p>
+</dd>
+</dl>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
